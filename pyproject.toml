@@ -1,0 +1,42 @@
+[tool.black]
+target-version = ["py311", "py310", "py39", "py38"]
+line-length = 88
+
+[tool.isort]
+profile = "black"
+
+[tool.mypy]
+strict = true
+check_untyped_defs = true
+disallow_any_generics = true
+disallow_incomplete_defs = true
+disallow_untyped_defs = true
+disallow_untyped_calls = true
+warn_redundant_casts = true
+ignore_missing_imports = true
+show_error_codes = true
+disallow_subclassing_any = true
+disallow_untyped_decorators = true
+warn_return_any = true
+strict_equality = true
+no_implicit_reexport = true
+no_implicit_optional = true
+
+
+[tool.ruff]
+select = ["ALL"]
+ignore = []
+unfixable = []
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+show-fixes = true
+target-version = "py311"
+line-length = 88
+
+[tool.ruff.isort]
+required-imports = ["from __future__ import annotations"]
+
+[tool.ruff.pydocstyle]
+convention = "pep257"
+
+[tool.pylint]
+disable = ["C0103"]
