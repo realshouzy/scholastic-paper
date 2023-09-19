@@ -4,20 +4,15 @@ from __future__ import annotations
 import argparse
 import ast
 from pathlib import Path
-from typing import Final, NamedTuple
+from typing import NamedTuple
 
 from typing_extensions import override
 
-_ERROR_MSG: Final[
-    str
-] = "'...' detected as placeholder for empty function body, use 'pass' instead"
-
 
 class _ErrorInfo(NamedTuple):
+    func_name: str
     lineno: int
     offset: int
-    msg: str
-    cls: type
 
 
 class _Visitor(ast.NodeVisitor):
@@ -26,24 +21,21 @@ class _Visitor(ast.NodeVisitor):
 
     @override
     def visit_FunctionDef(self, node: ast.FunctionDef) -> None:
-        if len(node.body) == 1 and isinstance(node.body[0], ast.Expr):
-            func_body: ast.Expr = node.body[0]
-            if (
-                isinstance(func_body.value, ast.Constant)
-                and hasattr(func_body.value, "value")
-                and isinstance(
-                    func_body.value.value,
-                    Ellipsis.__class__,
-                )
+        match node:
+            case ast.FunctionDef(
+                name=func_name,
+                body=[ast.Expr(value=ast.Constant(value=body_placeholder))],
             ):
-                self.errors.append(
-                    _ErrorInfo(
-                        func_body.value.lineno,
-                        func_body.value.col_offset,
-                        _ERROR_MSG,
-                        self.__class__,
-                    ),
-                )
+                if body_placeholder is Ellipsis:
+                    self.errors.append(
+                        _ErrorInfo(
+                            func_name,
+                            node.body[0].value.lineno,  # type: ignore[attr-defined]
+                            node.body[0].value.col_offset,  # type: ignore[attr-defined]
+                        ),
+                    )
+            case _:
+                pass
         self.generic_visit(node)
 
 
@@ -52,6 +44,9 @@ def _resolved_path_from_str(path_as_str: str) -> Path:
 
 
 def _lint_file(filepath: Path) -> int:
+    if filepath.suffix == ".pyi":
+        return 1
+
     visitor: _Visitor = _Visitor()
     contents: str = filepath.read_text(encoding="utf-8")
     tree = ast.parse(contents, filename=filepath.name)
