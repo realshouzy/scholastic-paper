@@ -57,7 +57,7 @@ def _lint_file(filepath: Path) -> int:
 
     visitor: Visitor = Visitor()
     contents: str = filepath.read_text(encoding="utf-8")
-    tree = ast.parse(contents, filename=filepath.name)
+    tree: ast.Module = ast.parse(contents, filename=filepath.name)
     visitor.visit(tree)
     print(visitor.errors)
     return 0
