@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """Demonstration of linting using AST."""
 from __future__ import annotations
 

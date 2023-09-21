@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """The difference between ASTs and CSTs."""
 from __future__ import annotations
 
