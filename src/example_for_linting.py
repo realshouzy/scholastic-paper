@@ -1,15 +1,21 @@
 """Example code for linting."""
 from __future__ import annotations
 
+# pylint: skip-file
 
-def f1() -> None:
-    ...
-
-
-def f2() -> None:
+try:
+    pass
+except ValueError:
+    pass
+except:
     pass
 
+try:
+    pass
+except:
+    ...
 
-def f3(arg: str) -> None:  # noqa: ARG001 # pylint: disable=W0613
-    """Do nothing."""
-    pass  # noqa: PIE790 # pylint: disable=W0107
+try:
+    pass
+except:
+    print("error")

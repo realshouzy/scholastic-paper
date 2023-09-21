@@ -2,6 +2,8 @@
 """The difference between ASTs and CSTs."""
 from __future__ import annotations
 
+__all__: list[str] = ["main"]
+
 import ast
 
 import libcst as cst
