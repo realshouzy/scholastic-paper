@@ -3,39 +3,47 @@ from __future__ import annotations
 
 import argparse
 import ast
+import builtins
 from pathlib import Path
 from typing import NamedTuple
 
 from typing_extensions import override
 
 
-class _ErrorInfo(NamedTuple):
+class ErrorInfo(NamedTuple):
     func_name: str
     lineno: int
     offset: int
 
 
-class _Visitor(ast.NodeVisitor):
+class Visitor(ast.NodeVisitor):
     def __init__(self) -> None:
-        self.errors: list[_ErrorInfo] = []
+        self.errors: list[ErrorInfo] = []
 
     @override
     def visit_FunctionDef(self, node: ast.FunctionDef) -> None:
-        match node:
-            case ast.FunctionDef(
-                name=func_name,
-                body=[ast.Expr(value=ast.Constant(value=body_placeholder))],
-            ):
-                if body_placeholder is Ellipsis:
-                    self.errors.append(
-                        _ErrorInfo(
-                            func_name,
-                            node.body[0].value.lineno,  # type: ignore[attr-defined]
-                            node.body[0].value.col_offset,  # type: ignore[attr-defined]
-                        ),
-                    )
+        found: bool = False
+        match node.body:
+            case [
+                ast.Expr(value=ast.Constant(value=val)),
+                ast.Expr(value=ast.Constant(value=builtins.Ellipsis)),
+            ] | [ast.Expr(value=ast.Constant(value=val)), ast.Pass()]:
+                if isinstance(val, str):
+                    found = True
+            case [ast.Expr(value=ast.Constant(value=builtins.Ellipsis))] | [ast.Pass()]:
+                found = True
             case _:
                 pass
+
+        if found:
+            self.errors.append(
+                ErrorInfo(
+                    node.name,
+                    node.body[0].lineno,
+                    node.body[0].col_offset,
+                ),
+            )
+
         self.generic_visit(node)
 
 
@@ -47,7 +55,7 @@ def _lint_file(filepath: Path) -> int:
     if filepath.suffix == ".pyi":
         return 1
 
-    visitor: _Visitor = _Visitor()
+    visitor: Visitor = Visitor()
     contents: str = filepath.read_text(encoding="utf-8")
     tree = ast.parse(contents, filename=filepath.name)
     visitor.visit(tree)
