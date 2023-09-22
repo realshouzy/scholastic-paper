@@ -17,7 +17,7 @@ class ErrorInfo(NamedTuple):
 
 
 class TryBlockLinter(Protocol):
-    """Class protocol for ``try`` block linters."""
+    """Protocol class for ``try`` block linters."""
 
     rule: ClassVar[str]
 
