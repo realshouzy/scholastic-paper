@@ -2,61 +2,38 @@
 """Demonstration of linting using AST."""
 from __future__ import annotations
 
-__all__: list[str] = ["main", "lint_file", "Visitor"]
+__all__: list[str] = ["main", "lint_file", "TryBlockVisitor"]
 
 import argparse
 import ast
 from pathlib import Path
-from typing import NamedTuple
+from typing import TYPE_CHECKING, ClassVar
 
 from typing_extensions import override
 
+from src.ast_checks import BareExceptNotAllowed, EmptyExceptBodyNotAllowed
 
-class ErrorInfo(NamedTuple):
-    lineno: int
-    offset: int
+if TYPE_CHECKING:
+    from src.ast_checks import ErrorInfo, TryBlockLinter
 
 
-class Visitor(ast.NodeVisitor):
+class TryBlockVisitor(ast.NodeVisitor):
+    """Custom AST visitor class overwriting the ``visit_Try`` method."""
+
+    checks: ClassVar[list[type[TryBlockLinter]]] = [
+        BareExceptNotAllowed,
+        EmptyExceptBodyNotAllowed,
+    ]
+
     def __init__(self) -> None:
         self.errors: list[ErrorInfo] = []
 
     @override
-    def visit_Try(self, node: ast.Try) -> None:
-        match node.handlers:
-            # TODO(realshouzy): Fix this
-            # case [
-            #     *_,
-            #     ast.ExceptHandler(
-            #         type=ast.Name(id=_, ctx=ast.Load()),
-            #         body=[ast.Pass() as empty_body]
-            #         | [
-            #             ast.Expr(
-            #                 value=ast.Constant(value=builtins.Ellipsis),
-            #             ) as empty_body,
-            #         ],
-            #     ),
-            # ]:
-            #     self.errors.append(
-            #         ErrorInfo(
-            #             empty_body.lineno,
-            #             empty_body.col_offset,
-            #         ),
-            #     )
-            case [*_, ast.ExceptHandler(body=_) as bare_except]:
-                self.errors.append(
-                    ErrorInfo(
-                        bare_except.lineno,
-                        bare_except.col_offset,
-                    ),
-                )
-            case _:
-                pass
+    def visit_Try(self, node: ast.Try) -> None:  # pylint: disable=C0103, C0116
+        for check in self.checks:
+            if (match := check.check(node)) is not None:
+                self.errors.append(match)
         self.generic_visit(node)
-
-
-def _resolved_path_from_str(path_as_str: str) -> Path:
-    return Path(path_as_str.strip()).resolve()
 
 
 def lint_file(filepath: Path) -> int:
@@ -64,14 +41,16 @@ def lint_file(filepath: Path) -> int:
     contents: str = filepath.read_text(encoding="utf-8")
     tree: ast.Module = ast.parse(contents, filename=filepath.name)
 
-    visitor: Visitor = Visitor()
+    visitor: TryBlockVisitor = TryBlockVisitor()
     visitor.visit(tree)
-    for (
-        lineno,
-        offset,
-    ) in visitor.errors:
-        print(f"{filepath.name}:{lineno}:{offset}")
+    for rule, lineno, offset in visitor.errors:
+        print(f"{rule} {filepath.name}:{lineno}:{offset}")
     return 0
+
+
+def _resolved_path_from_str(path_as_str: str) -> Path:
+    """Return the absolute path given a string of a path."""
+    return Path(path_as_str.strip()).resolve()
 
 
 def main() -> int:

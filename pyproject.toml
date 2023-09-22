@@ -25,23 +25,13 @@ no_implicit_optional = true
 
 [tool.ruff]
 select = ["ALL"]
-ignore = [
-    "F541",
-    "D101",
-    "D103",
-    "D107",
-    "ANN101",
-    "T201",
-    "ERA001",
-    "FIX002",
-    "TD003",
-]
+ignore = ["ANN101", "ANN102", "D107", "T201"]
 unfixable = []
 dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
 show-fixes = true
 target-version = "py311"
 line-length = 88
-exclude = ["./src/example_for_linting.py"]
+exclude = ["src/example_for_linting.py"]
 
 [tool.ruff.isort]
 required-imports = ["from __future__ import annotations"]
@@ -50,7 +40,7 @@ required-imports = ["from __future__ import annotations"]
 convention = "pep257"
 
 [tool.pylint]
-disable = ["C0115", "C0116", "C0103"]
+disable = ["R0903"]
 
 [tool.bandit]
 exclude_dirs = ["src/example_for_linting.py"]
