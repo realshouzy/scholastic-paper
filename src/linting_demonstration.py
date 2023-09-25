@@ -6,14 +6,16 @@ __all__: list[str] = ["main", "lint_file", "TryBlockVisitor"]
 
 import argparse
 import ast
-from pathlib import Path
 from typing import TYPE_CHECKING, ClassVar
 
 from typing_extensions import override
 
 from src.ast_checks import BareExceptNotAllowed, EmptyExceptBodyNotAllowed
+from src.utils import ast_to_source, resolved_path_from_str, source_to_ast
 
 if TYPE_CHECKING:
+    from pathlib import Path
+
     from src.ast_checks import ErrorInfo, TryBlockFormatter, TryBlockLinter
 
 
@@ -54,21 +56,9 @@ class TryBlockRewriter(ast.NodeTransformer):
         return node
 
 
-def _source_to_ast(filepath: Path) -> ast.Module:
-    """Return the AST of the given Python file."""
-    contents: str = filepath.read_text(encoding="utf-8")
-    return ast.parse(contents, filename=filepath.name)
-
-
-def _ast_to_source(tree: ast.AST, filepath: Path) -> None:
-    """Convert the given AST back to source code and write it into the given file."""
-    contents: str = ast.unparse(ast.fix_missing_locations(tree))
-    filepath.write_text(contents, encoding="utf-8")
-
-
 def lint_file(filepath: Path) -> int:
     """Lint the given file."""
-    tree: ast.Module = _source_to_ast(filepath)
+    tree: ast.Module = source_to_ast(filepath)
     visitor: TryBlockVisitor = TryBlockVisitor()
     visitor.visit(tree)
 
@@ -82,28 +72,23 @@ def lint_file(filepath: Path) -> int:
 
 def rewrite_file(filepath: Path) -> int:
     """Rewrite the given file."""
-    tree: ast.Module = _source_to_ast(filepath)
+    tree: ast.Module = source_to_ast(filepath)
     rewriter: TryBlockRewriter = TryBlockRewriter()
     new_tree: ast.Module = rewriter.visit(tree)
 
     if not rewriter.errors:
         return 0
 
-    _ast_to_source(new_tree, filepath)
+    ast_to_source(new_tree, filepath)
     for msg, lineno, offset in rewriter.errors:
         print(f"{filepath}:{lineno}:{offset}: Fixed {msg}")
     return 1
 
 
-def _resolved_path_from_str(path_as_str: str) -> Path:
-    """Return the absolute path given a string of a path."""
-    return Path(path_as_str.strip()).resolve()
-
-
 def main() -> int:
     """Run the program."""
     parser: argparse.ArgumentParser = argparse.ArgumentParser()
-    parser.add_argument("files", nargs="*", type=_resolved_path_from_str)
+    parser.add_argument("files", nargs="*", type=resolved_path_from_str)
     parser.add_argument("--fix", action="store_true")
     args: argparse.Namespace = parser.parse_args()
 
