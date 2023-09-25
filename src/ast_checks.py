@@ -11,7 +11,7 @@ from typing import ClassVar, NamedTuple, Protocol
 class ErrorInfo(NamedTuple):
     """A named tuple representing error information."""
 
-    rule: str
+    msg: str
     lineno: int
     offset: int
 
@@ -19,60 +19,85 @@ class ErrorInfo(NamedTuple):
 class TryBlockLinter(Protocol):
     """Protocol class for ``try`` block linters."""
 
-    rule: ClassVar[str]
+    msg: ClassVar[str]
 
     @classmethod
-    def check(cls, node: ast.Try) -> ErrorInfo | None:
+    def check(cls, node: ast.Try) -> list[ErrorInfo]:
         """Check for some pattern in the provided ``try`` block AST."""
+
+
+class TryBlockFormatter(Protocol):
+    """Protocol class for ``try`` block formatter."""
+
+    msg: ClassVar[str]
+
+    @classmethod
+    def check(cls, node: ast.Try) -> list[ErrorInfo]:
+        """Check for some pattern in the provided ``try`` block AST."""
+
+    @classmethod
+    def fix(cls, node: ast.Try) -> tuple[ast.Try, list[ErrorInfo]]:
+        """Rewrite the ``try`` block AST so that it fixes a certain problem."""
 
 
 class BareExceptNotAllowed:
     """Class for checking bare ``except`` clauses."""
 
-    rule: ClassVar[str] = "TRY01"
+    msg: ClassVar[str] = "bare exception"
 
     @classmethod
-    def check(cls, node: ast.Try) -> ErrorInfo | None:
+    def check(cls, node: ast.Try) -> list[ErrorInfo]:
         """Check for a bare except clause in the provided ``try`` block AST."""
-        match node.handlers:
-            case [*_, ast.ExceptHandler(body=_) as bare_except]:
-                return ErrorInfo(cls.rule, bare_except.lineno, bare_except.col_offset)
-            case _:
-                return None
+        return [
+            ErrorInfo(cls.msg, handler.lineno, handler.col_offset)
+            for handler in node.handlers
+            if handler.type is None
+        ]
+
+    @classmethod
+    def fix(cls, node: ast.Try) -> tuple[ast.Try, list[ErrorInfo]]:
+        """Rewrite all bare ``except:`` blocks to ``except Exception:``."""
+        fixes: list[ErrorInfo] = []
+        for handler in node.handlers:
+            if handler.type is None:
+                handler.type = ast.Name(id="Exception", ctx=ast.Load())
+                fixes.append(ErrorInfo(cls.msg, handler.lineno, handler.col_offset))
+        return node, fixes
 
 
 class EmptyExceptBodyNotAllowed:
     """Class for checking empty bodies of ``except`` clauses."""
 
-    rule: ClassVar[str] = "TRY02"
+    msg: ClassVar[str] = "empty except body"
 
     @classmethod
-    def check(cls, node: ast.Try) -> ErrorInfo | None:
+    def check(cls, node: ast.Try) -> list[ErrorInfo]:
         """Check for an empty ``except`` body in the provided ``try`` block AST.
 
         'Empty' meaning there is no exception handling, e.g.:
         >>> try:
-        ...     # some code
+        ...     ... # some code
         ... except SomeError:
         ...     pass # or '...'
         """
-        match node.handlers:
-            case [
-                *_,
-                ast.ExceptHandler(
-                    type=_,
+        matches: list[ErrorInfo] = []
+        for handler in node.handlers:
+            match handler:
+                case ast.ExceptHandler(
                     body=[ast.Pass() as empty_except_body]
                     | [
                         ast.Expr(
                             value=ast.Constant(value=builtins.Ellipsis),
                         ) as empty_except_body,
                     ],
-                ),
-            ]:
-                return ErrorInfo(
-                    cls.rule,
-                    empty_except_body.lineno,
-                    empty_except_body.col_offset,
-                )
-            case _:
-                return None
+                ):
+                    matches.append(
+                        ErrorInfo(
+                            cls.msg,
+                            empty_except_body.lineno,
+                            empty_except_body.col_offset,
+                        ),
+                    )
+                case _:
+                    pass
+        return matches
