@@ -27,7 +27,7 @@ class TryBlockLinter(Protocol):
 
 
 class TryBlockFormatter(Protocol):
-    """Protocol class for ``try`` block formatter."""
+    """Protocol class for ``try`` block formatters."""
 
     msg: ClassVar[str]
 
@@ -41,7 +41,7 @@ class TryBlockFormatter(Protocol):
 
 
 class BareExceptNotAllowed:
-    """Class for checking bare ``except`` clauses."""
+    """Class for handling bare ``except`` clauses."""
 
     msg: ClassVar[str] = "bare exception"
 
@@ -66,7 +66,7 @@ class BareExceptNotAllowed:
 
 
 class EmptyExceptBodyNotAllowed:
-    """Class for checking empty bodies of ``except`` clauses."""
+    """Class for handling empty bodies of ``except`` clauses."""
 
     msg: ClassVar[str] = "empty except body"
 
