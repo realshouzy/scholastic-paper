@@ -32,7 +32,8 @@ class TryBlockVisitor(ast.NodeVisitor):
 
     @override
     def visit_Try(self, node: ast.Try) -> None:  # pylint: disable=C0103, C0116
-        self.errors.extend(*[check.check(node) for check in self.checks])
+        for check in self.checks:
+            self.errors.extend(check.check(node))
         self.generic_visit(node)
 
 
