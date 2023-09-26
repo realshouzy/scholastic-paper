@@ -10,7 +10,7 @@ Firstly, clone the repository:
 git clone https://github.com/realshouzy/scientific-paper.git && cd scientific-paper
 ```
 
-It is highly recommended to utilize a virtual environment. After activation run the following command(s):
+It is highly recommended to utilize a virtual environment. After activation run the following command:
 
 ```bash
 pip install .
