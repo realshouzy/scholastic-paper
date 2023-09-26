@@ -32,4 +32,4 @@ def ast_to_source(tree: ast.AST, filepath: Path) -> None:
 def exce_ast(tree: ast.AST) -> None:
     """Compiel and excecute the given AST."""
     src: str = ast.unparse(ast.fix_missing_locations(tree))
-    exec(src, {})  # noqa: S102 # pylint: disable=W0122 # nosec
+    exec(src, {"__name__": "__main__"})  # noqa: S102 # pylint: disable=W0122 # nosec
