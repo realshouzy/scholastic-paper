@@ -88,7 +88,11 @@ def main() -> int:
     """Run the program."""
     parser: argparse.ArgumentParser = argparse.ArgumentParser()
     parser.add_argument("files", nargs="*", type=resolved_path_from_str)
-    parser.add_argument("--fix", action="store_true")
+    parser.add_argument(
+        "--fix",
+        action="store_true",
+        help="Attempt to automatically fix violations that can be fixed",
+    )
     args: argparse.Namespace = parser.parse_args()
 
     exit_code: int = 0

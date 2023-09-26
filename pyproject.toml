@@ -1,3 +1,48 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+
+[project]
+name = "scientific-paper"
+description = "This is the code used in a scientific paper I wrote for school"
+readme = "README.md"
+license = { text = "MIT" }
+authors = [{ name = "realshouzy" }]
+maintainers = [{ name = "realshouzy" }]
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: Implementation :: CPython",
+]
+requires-python = ">=3.10"
+dynamic = ["version", "dependencies"]
+
+[project.urls]
+Repository = "https://github.com/realshouzy/auto-file-sorter"
+
+[project.optional-dependencies]
+# keep in sync with requirements-dev.txt
+dev = ["bandit", "black", "isort", "mypy", "pre-commit", "pylint", "ruff"]
+
+[project.scripts]
+linting_demonstration = "src.linting_demonstration:main"
+assert_enhancer = "src.assert_enhancer:main"
+
+[tool.setuptools]
+packages = ["src"]
+license-files = ["LICENSE"]
+
+[tool.setuptools.package-data]
+auto_file_sorter = ["py.typed"]
+
+[tool.setuptools.dynamic]
+version = { attr = "src.__version__" }
+dependencies = { file = "requirements.txt" }
+
 [tool.black]
 target-version = ["py311", "py310"]
 line-length = 88

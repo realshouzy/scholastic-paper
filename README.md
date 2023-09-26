@@ -1,5 +1,35 @@
 **This is the code used in a scientific paper about *Syntax Trees* I wrote for school.**
 
+# Documentation
+
+## Installation
+
+Firstly, clone the repository:
+
+```bash
+git clone https://github.com/realshouzy/scientific-paper.git && cd scientific-paper
+```
+
+It is highly recommended to utilize a virtual environment. After activation run the following command(s):
+
+```bash
+pip install .
+```
+
+## Usage
+
+If you want to run ``linting_demonstration``, consult:
+
+```bash
+linting_demonstration -h
+```
+
+If you want to run ``assert_enhancer``, consult:
+
+```bash
+linting_demonstration -h
+```
+
 [![pre-commit.ci status](https://results.pre-commit.ci/badge/github/realshouzy/thesis-code/main.svg)](https://results.pre-commit.ci/latest/github/realshouzy/thesis-code/main)
 [![pylint status](https://github.com/realshouzy/thesis-code/actions/workflows/pylint.yaml/badge.svg)](https://github.com/realshouzy/thesis-code/actions/workflows/pylint.yaml)
 [![CodeQL](https://github.com/realshouzy/thesis-code/actions/workflows/codeql.yaml/badge.svg)](https://github.com/realshouzy/thesis-code/actions/workflows/codeql.yaml)
