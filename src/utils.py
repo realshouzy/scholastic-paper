@@ -1,7 +1,12 @@
 """Module containing utilities."""
 from __future__ import annotations
 
-__all__: list[str] = ["resolved_path_from_str", "source_to_ast", "ast_to_source"]
+__all__: list[str] = [
+    "resolved_path_from_str",
+    "source_to_ast",
+    "ast_to_source",
+    "exce_ast",
+]
 
 import ast
 from pathlib import Path
@@ -22,3 +27,15 @@ def ast_to_source(tree: ast.AST, filepath: Path) -> None:
     """Convert the given AST back to source code and write it into the given file."""
     contents: str = ast.unparse(ast.fix_missing_locations(tree))
     filepath.write_text(contents, encoding="utf-8")
+
+
+def exce_ast(tree: ast.AST, filepath: Path) -> None:
+    """Compiel and excecute the given AST."""
+    src: str = ast.unparse(ast.fix_missing_locations(tree))
+    exec(  # noqa: S102 # pylint: disable=W0122 # nosec
+        compile(
+            src,
+            filename=filepath.name,
+            mode="exec",
+        ),
+    )
