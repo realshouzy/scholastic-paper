@@ -6,11 +6,6 @@ from __future__ import annotations
 
 def square(num: int) -> int:
     """Calculate the square of the given integer."""
+    # result: int = (num * num)
     result: int = num * num
     return result
-
-
-# def square(num: int) -> int:
-#     """Calculate the square of the given integer."""
-#     result: int = (num * num)  # some code comment
-#     return result
