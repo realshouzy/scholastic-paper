@@ -27,7 +27,7 @@ linting_demonstration -h
 If you want to run ``assert_enhancer``, consult:
 
 ```bash
-linting_demonstration -h
+assert_enhancer -h
 ```
 
 [![pre-commit.ci status](https://results.pre-commit.ci/badge/github/realshouzy/thesis-code/main.svg)](https://results.pre-commit.ci/latest/github/realshouzy/thesis-code/main)
