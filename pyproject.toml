@@ -76,7 +76,7 @@ dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
 show-fixes = true
 target-version = "py311"
 line-length = 88
-exclude = ["src/example_for_linting.py"]
+exclude = ["src/example*.py"]
 
 [tool.ruff.isort]
 required-imports = ["from __future__ import annotations"]
@@ -88,4 +88,4 @@ convention = "pep257"
 disable = ["R0903"]
 
 [tool.bandit]
-exclude_dirs = ["src/example_for_linting.py"]
+exclude_dirs = ["src/example*.py"]
