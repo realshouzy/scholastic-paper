@@ -29,8 +29,8 @@ Repository = "https://github.com/realshouzy/auto-file-sorter"
 dev = ["bandit", "black", "isort", "mypy", "pre-commit", "pylint", "ruff"]
 
 [project.scripts]
-linting_demonstration = "src.linting_demonstration:main"
-assert_enhancer = "src.assert_enhancer:main"
+linting-demonstration = "src.linting_demonstration:main"
+assert-enhancer = "src.assert_enhancer:main"
 
 [tool.setuptools]
 packages = ["src"]

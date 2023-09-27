@@ -21,13 +21,13 @@ pip install .
 If you want to run ``linting_demonstration``, consult:
 
 ```bash
-linting_demonstration -h
+linting-demonstration -h
 ```
 
 If you want to run ``assert_enhancer``, consult:
 
 ```bash
-assert_enhancer -h
+assert-enhancer -h
 ```
 
 [![pre-commit.ci status](https://results.pre-commit.ci/badge/github/realshouzy/thesis-code/main.svg)](https://results.pre-commit.ci/latest/github/realshouzy/thesis-code/main)
