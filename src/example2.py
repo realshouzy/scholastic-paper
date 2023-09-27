@@ -3,4 +3,9 @@ from __future__ import annotations
 
 # pylint: skip-file
 
-a = 1 + 2  # some code comment
+try:
+    pass
+except ValueError:
+    print("ValueError raised")
+except:
+    pass
