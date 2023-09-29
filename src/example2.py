@@ -3,9 +3,15 @@ from __future__ import annotations
 
 # pylint: skip-file
 
+
+# bare-except
 try:
-    pass
-except ValueError:
-    print("ValueError raised")
+    exit()
 except:
-    pass
+    print("Catching any exception")  # even SystemExit
+
+# empty-except-body
+try:
+    raise Exception
+except Exception:
+    pass  # or ...

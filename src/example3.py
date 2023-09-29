@@ -6,11 +6,11 @@ from __future__ import annotations
 a, b = 1, 2
 
 
-def func() -> None:
+def test_something() -> None:
     """Do some assertion."""
     c: int = 3
     assert a + b - c
 
 
 if __name__ == "__main__":
-    func()
+    test_something()

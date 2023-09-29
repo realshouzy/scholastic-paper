@@ -85,7 +85,7 @@ required-imports = ["from __future__ import annotations"]
 convention = "pep257"
 
 [tool.pylint]
-disable = ["R0903"]
+disable = ["R0903", "R0801"]
 
 [tool.bandit]
 exclude_dirs = ["src/example*.py"]

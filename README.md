@@ -18,13 +18,13 @@ pip install .
 
 ## Usage
 
-If you want to run ``linting_demonstration``, consult:
+If you need help for ``linting_demonstration``, consult:
 
 ```bash
 linting-demonstration -h
 ```
 
-If you want to run ``assert_enhancer``, consult:
+If you need help for ``assert_enhancer``, consult:
 
 ```bash
 assert-enhancer -h

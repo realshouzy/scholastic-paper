@@ -87,7 +87,12 @@ def rewrite_file(filepath: Path) -> int:
 def main() -> int:
     """Run the program."""
     parser: argparse.ArgumentParser = argparse.ArgumentParser()
-    parser.add_argument("files", nargs="*", type=resolved_path_from_str)
+    parser.add_argument(
+        "files",
+        nargs="*",
+        type=resolved_path_from_str,
+        help="Files to be processed",
+    )
     parser.add_argument(
         "--fix",
         action="store_true",

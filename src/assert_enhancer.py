@@ -2,6 +2,8 @@
 """Running custom ``assert`` statements AST manipulation."""
 from __future__ import annotations
 
+__all__: list[str] = ["AssertTransformer", "main"]
+
 import argparse
 import ast
 from typing import TYPE_CHECKING
@@ -35,9 +37,11 @@ class AssertTransformer(ast.NodeTransformer):
         ...     print(f"<filepath>:<linenumber><columnoffset> assert a + b < c failed (a=1, b=2, c=3)")
         """  # noqa: E501 # pylint: disable=C0301
         variables: set[str] = self._get_variables_from_expression(node.test)
+
         formatted_variables: list[
             ast.Constant | ast.FormattedValue
         ] = self._get_formatted_vars_as_ast(variables)
+
         if_stmt_body: ast.Expr = self._get_if_stmt_body_as_ast(
             node,
             formatted_variables,
@@ -123,7 +127,12 @@ def _run_custom_asserts(filepath: Path) -> int:
 def main() -> int:
     """Run the program."""
     parser: argparse.ArgumentParser = argparse.ArgumentParser()
-    parser.add_argument("files", nargs="*", type=resolved_path_from_str)
+    parser.add_argument(
+        "files",
+        nargs="*",
+        type=resolved_path_from_str,
+        help="Files to be processed",
+    )
     args: argparse.Namespace = parser.parse_args()
 
     exit_code: int = 0
