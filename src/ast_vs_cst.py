@@ -2,7 +2,7 @@
 """The difference between ASTs and CSTs."""
 from __future__ import annotations
 
-__all__: list[str] = ["main"]
+__all__: tuple[str, ...] = ("main",)
 
 import ast
 

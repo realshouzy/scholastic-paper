@@ -2,7 +2,7 @@
 """Demonstration of linting using AST."""
 from __future__ import annotations
 
-__all__: list[str] = ["main", "lint_file", "TryBlockVisitor"]
+__all__: tuple[str, ...] = ("main", "lint_file", "TryBlockVisitor")
 
 import argparse
 import ast

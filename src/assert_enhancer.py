@@ -34,7 +34,7 @@ class AssertTransformer(ast.NodeTransformer):
         >>> assert a + b < c
         >>> # will be transformed to
         >>> if a + b < c:
-        ...     print(f"<filepath>:<linenumber><columnoffset> assert a + b < c failed (a=1, b=2, c=3)")
+        ...     print(f"<filepath>:<linenumber><columnoffset> assert a + b < c failed ({a=}, {b=}, {c=})")
         """  # noqa: E501 # pylint: disable=C0301
         variables: set[str] = self._get_variables_from_expression(node.test)
 
@@ -117,6 +117,7 @@ class AssertTransformer(ast.NodeTransformer):
 
 
 def _run_custom_asserts(filepath: Path) -> int:
+    """Run custom assert statements in the provided file."""
     tree: ast.Module = source_to_ast(filepath)
     rewriter: AssertTransformer = AssertTransformer(filepath)
     new_tree: ast.Module = rewriter.visit(tree)
