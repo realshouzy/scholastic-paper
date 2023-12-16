@@ -7,7 +7,7 @@
 Firstly, clone the repository:
 
 ```bash
-git clone https://github.com/realshouzy/scientific-paper.git && cd scientific-paper
+git clone https://github.com/realshouzy/scholastic-scientific-paper.git && cd scholastic-scientific-paper
 ```
 
 It is highly recommended to utilize a virtual environment. After activation run the following command:
