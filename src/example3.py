@@ -9,7 +9,7 @@ a, b = 1, 2
 def test_something() -> None:
     """Do some assertion."""
     c = 3
-    assert not a + b - c
+    assert a + b - c
 
 
 if __name__ == "__main__":
