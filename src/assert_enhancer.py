@@ -119,8 +119,8 @@ class AssertTransformer(ast.NodeTransformer):
 def _run_custom_asserts(filepath: Path) -> int:
     """Run custom assert statements in the provided file."""
     tree: ast.Module = source_to_ast(filepath)
-    rewriter: AssertTransformer = AssertTransformer(filepath)
-    new_tree: ast.Module = rewriter.visit(tree)
+    transformer: AssertTransformer = AssertTransformer(filepath)
+    new_tree: ast.Module = transformer.visit(tree)
     exce_ast(new_tree)
     return 0
 

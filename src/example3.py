@@ -8,8 +8,8 @@ a, b = 1, 2
 
 def test_something() -> None:
     """Do some assertion."""
-    c: int = 3
-    assert a + b - c
+    c = 3
+    assert not a + b - c
 
 
 if __name__ == "__main__":
