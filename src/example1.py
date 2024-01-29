@@ -1,4 +1,5 @@
 """Example Nr. 1."""
+
 from __future__ import annotations
 
 # pylint: skip-file

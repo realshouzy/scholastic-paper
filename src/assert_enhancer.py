@@ -38,9 +38,9 @@ class AssertTransformer(ast.NodeTransformer):
         """  # noqa: E501 # pylint: disable=C0301
         variables: set[str] = self._get_variables_from_expression(node.test)
 
-        formatted_variables: list[
-            ast.Constant | ast.FormattedValue
-        ] = self._get_formatted_vars_as_ast(variables)
+        formatted_variables: list[ast.Constant | ast.FormattedValue] = (
+            self._get_formatted_vars_as_ast(variables)
+        )
 
         if_stmt_body: ast.Expr = self._get_if_stmt_body_as_ast(
             node,

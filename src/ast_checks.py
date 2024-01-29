@@ -1,4 +1,5 @@
 """Module containing the classes that check the AST for certain patterns."""
+
 from __future__ import annotations
 
 __all__: tuple[str, ...] = ("BareExceptNotAllowed", "EmptyExceptBodyNotAllowed")
