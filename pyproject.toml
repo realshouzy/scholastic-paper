@@ -67,19 +67,18 @@ no_implicit_optional = true
 
 
 [tool.ruff]
-select = ["ALL"]
-ignore = ["ANN101", "ANN102", "D107", "T201", "PD011"]
-unfixable = []
-dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+lint.select = ["ALL"]
+lint.ignore = ["ANN101", "ANN102", "D107", "T201", "PD011"]
+lint.unfixable = []
 show-fixes = true
 target-version = "py311"
 line-length = 88
 exclude = ["src/example*.py"]
 
-[tool.ruff.isort]
+[tool.ruff.lint.isort]
 required-imports = ["from __future__ import annotations"]
 
-[tool.ruff.pydocstyle]
+[tool.ruff.lint.pydocstyle]
 convention = "pep257"
 
 [tool.pylint]
