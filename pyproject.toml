@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "scientific-paper"
-description = "This is the code used in a scientific paper I wrote for school"
+description = "This is the code used in a paper I wrote for school"
 readme = "README.md"
 license = { text = "MIT" }
 authors = [{ name = "realshouzy" }]
@@ -20,7 +20,7 @@ requires-python = "~=3.11"
 dynamic = ["version", "dependencies"]
 
 [project.urls]
-Repository = "https://github.com/realshouzy/scholastic-scientific-paper"
+Repository = "https://github.com/realshouzy/scholastic-paper"
 
 [project.optional-dependencies]
 # keep in sync with requirements-dev.txt
